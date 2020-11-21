@@ -9,6 +9,7 @@ const overlayModal = document.querySelector('.lightbox__overlay');
 
 const galleryContainer = document.querySelector('.js-gallery');
 const cardsMarkup = createGalleryCardsMarkup(images);
+let currentIndex = 0;
 
 galleryContainer.insertAdjacentHTML('beforeend', cardsMarkup);
 
@@ -16,10 +17,9 @@ galleryContainer.addEventListener('click', onGalleryContainerClick);
 btnCloseModal.addEventListener('click', onBtnCloseModalClick);
 overlayModal.addEventListener('click', onOverlayModalClick);
 
-function createGalleryCardsMarkup(images, i) {
-  i = 0;
+function createGalleryCardsMarkup(images) {
   return images
-    .map(({ preview, original, description }) => {
+    .map(({ preview, original, description }, i) => {
       return `<li class="gallery__item">
   <a
     class="gallery__link"
@@ -29,7 +29,7 @@ function createGalleryCardsMarkup(images, i) {
       class="gallery__image"
       src="${preview}"
       data-source="${original}"
-      data-index="${(i += 1)}"
+      data-index="${i}"
       alt="${description}"
     />
   </a>
@@ -41,33 +41,55 @@ function createGalleryCardsMarkup(images, i) {
 function onGalleryContainerClick(evt) {
   evt.preventDefault();
 
+  currentIndex = Number(evt.target.getAttribute('data-index'));
+
   if (!evt.target.classList.contains('gallery__image')) {
     return;
   }
 
   window.addEventListener('keydown', onEscKeyPress);
-
+  window.addEventListener('keydown', onRightPress);
+  window.addEventListener('keydown', onLeftPress);
   modal.classList.add('is-open');
 
   modalImage.src = evt.target.dataset.source;
 }
 
-function onBtnCloseModalClick(evt) {
+function onBtnCloseModalClick() {
   window.removeEventListener('keydown', onEscKeyPress);
-
+  window.removeEventListener('keydown', onRightPress);
+  window.removeEventListener('keydown', onLeftPress);
   modal.classList.remove('is-open');
+
   modalImage.src = '';
 }
 
-function onOverlayModalClick(evt) {
+function onOverlayModalClick() {
   onBtnCloseModalClick();
 }
 
 function onEscKeyPress(evt) {
-  const ESC_KEY_CODE = 'Escape';
-  const isEscKey = evt.code === ESC_KEY_CODE;
-
-  if (isEscKey) {
+  if (evt.code === 'Escape') {
     onBtnCloseModalClick();
+  }
+}
+
+function onRightPress(evt) {
+  if (evt.code === 'ArrowRight') {
+    currentIndex += 1;
+    if (currentIndex === images.length) {
+      currentIndex = 0;
+    }
+    modalImage.src = images[currentIndex].original;
+  }
+}
+
+function onLeftPress(evt) {
+  if (evt.code === 'ArrowLeft') {
+    currentIndex -= 1;
+    if (currentIndex < 0) {
+      currentIndex = images.length - 1;
+    }
+    modalImage.src = images[currentIndex].original;
   }
 }
