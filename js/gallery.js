@@ -16,7 +16,8 @@ galleryContainer.addEventListener('click', onGalleryContainerClick);
 btnCloseModal.addEventListener('click', onBtnCloseModalClick);
 overlayModal.addEventListener('click', onOverlayModalClick);
 
-function createGalleryCardsMarkup(images) {
+function createGalleryCardsMarkup(images, i) {
+  i = 0;
   return images
     .map(({ preview, original, description }) => {
       return `<li class="gallery__item">
@@ -28,6 +29,7 @@ function createGalleryCardsMarkup(images) {
       class="gallery__image"
       src="${preview}"
       data-source="${original}"
+      data-index="${(i += 1)}"
       alt="${description}"
     />
   </a>
@@ -39,11 +41,11 @@ function createGalleryCardsMarkup(images) {
 function onGalleryContainerClick(evt) {
   evt.preventDefault();
 
-  window.addEventListener('keydown', onEscKeyPress);
-
   if (!evt.target.classList.contains('gallery__image')) {
     return;
   }
+
+  window.addEventListener('keydown', onEscKeyPress);
 
   modal.classList.add('is-open');
 
@@ -58,8 +60,7 @@ function onBtnCloseModalClick(evt) {
 }
 
 function onOverlayModalClick(evt) {
-  modal.classList.remove('is-open');
-  modalImage.src = '';
+  onBtnCloseModalClick();
 }
 
 function onEscKeyPress(evt) {
