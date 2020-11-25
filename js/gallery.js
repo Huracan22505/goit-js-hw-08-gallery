@@ -22,6 +22,7 @@ function createGalleryCardsMarkup(images) {
     href="${original}"
   >
     <img
+      loading="lazy"
       class="gallery__image"
       src="${preview}"
       data-source="${original}"
