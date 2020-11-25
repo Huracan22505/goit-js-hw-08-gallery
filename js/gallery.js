@@ -57,8 +57,8 @@ function onGalleryContainerClick(evt) {
   window.addEventListener('keydown', onEscKeyPress);
   window.addEventListener('keydown', onRightPress);
   window.addEventListener('keydown', onLeftPress);
-  btnSlideLeft.addEventListener('click', onLeftBtnClick);
-  btnSlideRight.addEventListener('click', onRightBtnClick);
+  btnSlideLeft.addEventListener('click', onLeftSliderClick);
+  btnSlideRight.addEventListener('click', onRightSliderClick);
 
   modal.classList.add('is-open');
 
@@ -69,8 +69,8 @@ function remover() {
   window.removeEventListener('keydown', onEscKeyPress);
   window.removeEventListener('keydown', onRightPress);
   window.removeEventListener('keydown', onLeftPress);
-  btnSlideLeft.addEventListener('click', onLeftBtnClick);
-  btnSlideRight.addEventListener('click', onRightBtnClick);
+  btnSlideLeft.removeEventListener('click', onLeftSliderClick);
+  btnSlideRight.removeEventListener('click', onRightSliderClick);
 
   modal.classList.remove('is-open');
 
@@ -93,36 +93,28 @@ function onEscKeyPress(evt) {
 
 function onRightPress(evt) {
   if (evt.code === 'ArrowRight') {
-    currentIndex += 1;
-    if (currentIndex === images.length) {
-      currentIndex = 0;
-    }
-    modalImage.src = images[currentIndex].original;
+    onRightSliderClick();
   }
 }
 
 function onLeftPress(evt) {
   if (evt.code === 'ArrowLeft') {
-    currentIndex -= 1;
-    if (currentIndex < 0) {
-      currentIndex = images.length - 1;
-    }
-    modalImage.src = images[currentIndex].original;
+    onLeftSliderClick();
   }
 }
 
-function onLeftBtnClick() {
-  currentIndex -= 1;
-  if (currentIndex < 0) {
-    currentIndex = images.length - 1;
+function onRightSliderClick() {
+  currentIndex += 1;
+  if (currentIndex === images.length) {
+    currentIndex = 0;
   }
   modalImage.src = images[currentIndex].original;
 }
 
-function onRightBtnClick() {
-  currentIndex += 1;
-  if (currentIndex === images.length) {
-    currentIndex = 0;
+function onLeftSliderClick() {
+  currentIndex -= 1;
+  if (currentIndex < 0) {
+    currentIndex = images.length - 1;
   }
   modalImage.src = images[currentIndex].original;
 }
