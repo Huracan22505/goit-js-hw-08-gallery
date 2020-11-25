@@ -5,10 +5,15 @@ let currentIndex = 0;
 
 const modal = document.querySelector('.js-lightbox');
 const modalImage = document.querySelector('.lightbox__image');
+const overlayModal = document.querySelector('.lightbox__overlay');
+
 const btnCloseModal = document.querySelector(
   'button[data-action="close-lightbox"]',
 );
-const overlayModal = document.querySelector('.lightbox__overlay');
+const btnSlideLeft = document.querySelector('button[data-action="left-arrow"]');
+const btnSlideRight = document.querySelector(
+  'button[data-action="right-arrow"]',
+);
 
 const galleryContainer = document.querySelector('.js-gallery');
 const cardsMarkup = createGalleryCardsMarkup(images);
@@ -52,6 +57,9 @@ function onGalleryContainerClick(evt) {
   window.addEventListener('keydown', onEscKeyPress);
   window.addEventListener('keydown', onRightPress);
   window.addEventListener('keydown', onLeftPress);
+  btnSlideLeft.addEventListener('click', onLeftBtnClick);
+  btnSlideRight.addEventListener('click', onRightBtnClick);
+
   modal.classList.add('is-open');
 
   modalImage.src = evt.target.dataset.source;
@@ -61,6 +69,9 @@ function remover() {
   window.removeEventListener('keydown', onEscKeyPress);
   window.removeEventListener('keydown', onRightPress);
   window.removeEventListener('keydown', onLeftPress);
+  btnSlideLeft.addEventListener('click', onLeftBtnClick);
+  btnSlideRight.addEventListener('click', onRightBtnClick);
+
   modal.classList.remove('is-open');
 
   modalImage.src = '';
@@ -98,4 +109,20 @@ function onLeftPress(evt) {
     }
     modalImage.src = images[currentIndex].original;
   }
+}
+
+function onLeftBtnClick() {
+  currentIndex -= 1;
+  if (currentIndex < 0) {
+    currentIndex = images.length - 1;
+  }
+  modalImage.src = images[currentIndex].original;
+}
+
+function onRightBtnClick() {
+  currentIndex += 1;
+  if (currentIndex === images.length) {
+    currentIndex = 0;
+  }
+  modalImage.src = images[currentIndex].original;
 }
